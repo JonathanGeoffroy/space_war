@@ -83,33 +83,11 @@ void Vaisseau::deplacer(RenderWindow* win, int dx, int dy) {
 	}
 }
 /**
-  * Pour les ennemis "classiques", l'ia consiste simplement à:
+  * Pour les ennemis "classiques", l'ia consiste simplement, toutes les 1.5 secondes, à:
   		* se déplacer à gauche ou droite au hasard (sous réserve que le vaisseau ne touche pas déjà un bord)
-  		* tirer une fois sur 3 en moyenne; avec une petite gestion du hasard
+  		* tirer 
   */
 void Vaisseau::ia(Jeu* jeu) {
-	/*
-	Vector2f pos = GetPosition();
-	int deplacement;
-	if(pos.x + (GetSize().x / 2) >= jeu->getWindow()->GetWidth()) {
-		deplacement = -1;
-	} else if(pos.x <= 0) {
-		deplacement = 1;
-	} else {
-		float dirIa = sf::Randomizer::Random(-1, 1);
-		if(dirIa > 0) {
-			deplacement = 1;
-		} else {
-			deplacement = -1;
-		}
-	}
-	Move(deplacement, 0);
-
-	float tirIa = sf::Randomizer::Random(0, 3);
-	if(tirIa >= 2) {
-		tirer(jeu);
-	}
-	*/
 	if(dernierTir.GetElapsedTime() >= 1.5) {
 		tirer(jeu);
 		float dirIa = sf::Randomizer::Random(0, 2);
