@@ -23,13 +23,11 @@ public:
 	RenderWindow* getWindow();
 private:
 	static sf::Image imgViseur;
-	static sf::SoundBuffer sbTir;
 	RenderWindow* window;
 	deque<Vaisseau*> ennemis;
 	Vaisseau joueur;
 	deque<Tir*> tirs;
 	Sprite viseur;
-	Sound sonTir;
 	Music musique;
 };
 #endif

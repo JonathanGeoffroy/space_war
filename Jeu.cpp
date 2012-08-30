@@ -1,9 +1,7 @@
 #include "Jeu.hpp"
 sf::Image Jeu::imgViseur = sf::Image();
-sf::SoundBuffer Jeu::sbTir = sf::SoundBuffer();
 
 Jeu::Jeu(RenderWindow* win) : 	joueur(Affichable::HAUT, Vaisseau::JOUEUR),
-								sonTir(sbTir),
 								musique()
 {
 	window = win;
@@ -18,8 +16,7 @@ Jeu::Jeu(RenderWindow* win) : 	joueur(Affichable::HAUT, Vaisseau::JOUEUR),
 Jeu::~Jeu() {}
 
 bool Jeu::init() {
-	return Jeu::imgViseur.LoadFromFile("./images/viseur.png") && 
-		   Jeu::sbTir.LoadFromFile("./sons/tir.wav");
+	return Jeu::imgViseur.LoadFromFile("./images/viseur.png");
 }
 
 void Jeu::jouer() {
@@ -27,6 +24,8 @@ void Jeu::jouer() {
 	Event event;
 	Vaisseau* vaissTmp;
 	musique.Play();
+	bool enTrainDeTirer = false;
+	int deplacementHorizontal = 0;
 	while(continuer && ! joueur.estMort()) {
 		while(window->GetEvent(event)) {
 			switch(event.Type) {
@@ -37,15 +36,27 @@ void Jeu::jouer() {
 						break;
 					case Key::Left:
 					case Key::Q:
-						joueur.deplacer(window, -Vaisseau::VITESSE_JOUEUR, 0);
+						deplacementHorizontal = -1;
 						break;
 					case Key::Right:
 					case Key::D:
-						joueur.deplacer(window, Vaisseau::VITESSE_JOUEUR, 0);
+						deplacementHorizontal = 1;
 						break;
 					default:break;
 				}
 				break;
+			case Event::KeyReleased:
+				switch(event.Key.Code) {
+					case Key::Left:
+					case Key::Q:
+					case Key::Right:
+					case Key::D:
+						deplacementHorizontal = 0;
+						break;
+					default: break;
+				}
+				break;
+
 			case Event::MouseMoved:
 				viseur.SetPosition(event.MouseMove.X - (viseur.GetSize().x / 2), event.MouseMove.Y - (viseur.GetSize().y / 2));
 				/*
@@ -57,13 +68,15 @@ void Jeu::jouer() {
 				break;
 			case Event::MouseButtonPressed:
 				if(event.MouseButton.Button == sf::Mouse::Left) {
-					sonTir.Play();
-					Tir *t = new Tir(&joueur);
-					tirs.push_back(t);
+					enTrainDeTirer = true;
 				} else if (event.MouseButton.Button == sf::Mouse::Right) {
 
 				}
 				break;
+			case Event::MouseButtonReleased:
+				if(event.MouseButton.Button == sf::Mouse::Left) {
+					enTrainDeTirer = false;
+				}
 			default: break;
 			}
 		}
@@ -76,8 +89,20 @@ void Jeu::jouer() {
 			vaissTmp->SetPosition(sf::Randomizer::Random(0, (int)(window->GetWidth() - vaissTmp->GetSize().x)), sf::Randomizer::Random(0, (int)(window->GetHeight() / 2 - vaissTmp->GetSize().y)));
 			ennemis.push_back(vaissTmp);
 		}
+		/* 
+		 Permet de déplacer le joueur, sans tenir compte du temps de latence de EnableKeyRepeat
+		 Même chose pour le clic et le tir : on est plus obligé de cliquer plein de fois : on peut laisser appuyé!
+		*/
+		if(deplacementHorizontal != 0)
+			joueur.deplacer(window, Vaisseau::VITESSE_JOUEUR * deplacementHorizontal, 0);
+		if(enTrainDeTirer)
+			joueur.tirer(this);
+
 		changeTime();
 		affiche();
+	}
+	if(joueur.estMort()) {
+		cout << "VOUS ETES MORT !!!!!!!" << endl;
 	}
 }
 
