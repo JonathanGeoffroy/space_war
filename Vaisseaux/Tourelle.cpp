@@ -15,24 +15,24 @@ Tourelle::Tourelle() : Vaisseau(Affichable::BAS, Vaisseau::TOURELLE) {
   */
 void Tourelle::ia(Jeu* jeu) {
 	int rotat = GetRotation();
+	cout << rotat << endl;
+
 	if(! tirEnCours) {
 		//Dans ce cicle, on a pas encore tiré : on se déplace vers la gauche jusqu'à se trouver à -90 
-		if(rotat <= 270 && dirHorizontale == GAUCHE) {
+		if(rotat <= 135 && dirHorizontale == GAUCHE) { //Décalage de 45° vers la gauche
 			//On commence à tirer !
 			tirEnCours = true;
 			dirHorizontale = DROITE;
 		}
-		else if (rotat == 180)
-			dirHorizontale = GAUCHE;
 		else
 			SetRotation(rotat + dirHorizontale);
 	}
 	else {
 		SetRotation(rotat + dirHorizontale);
 		
-		if(rotat <= -90) {
+		if(rotat >= 225) { //On tir en tournant vers la droite jusqu'à faire 90°
 			tirEnCours = false;
-			dirHorizontale = DROITE;
+			dirHorizontale = GAUCHE;
 		}
 		else
 			tirer(jeu);

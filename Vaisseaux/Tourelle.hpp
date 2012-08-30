@@ -9,7 +9,7 @@ public:
 	Tourelle();
 	virtual void ia(Jeu* jeu);
 private:
-	const static int GAUCHE = 1, DROITE = -1;
+	const static int GAUCHE = -1, DROITE = 1;
 	bool tirEnCours;
 	int dirHorizontale;
 };
