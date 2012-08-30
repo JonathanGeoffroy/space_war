@@ -86,7 +86,7 @@ void Jeu::jouer() {
 				en abscisse : n'importe où sur l'ecran
 				en ordonnée : sur la première moitié de l'ecran
 			*/
-			vaissTmp->SetPosition(sf::Randomizer::Random(0, (int)(window->GetWidth() - vaissTmp->GetSize().x)), sf::Randomizer::Random(0, (int)(window->GetHeight() / 2 - vaissTmp->GetSize().y)));
+			vaissTmp->SetPosition(sf::Randomizer::Random((int)(vaissTmp->GetSize().x / 2), (int)(window->GetWidth() - vaissTmp->GetSize().x)), sf::Randomizer::Random((int)(vaissTmp->GetSize().y / 2), (int)(window->GetHeight() / 2 - vaissTmp->GetSize().y)));
 			ennemis.push_back(vaissTmp);
 		}
 		/* 
