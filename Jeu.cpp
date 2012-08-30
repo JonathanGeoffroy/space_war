@@ -13,10 +13,24 @@ Jeu::Jeu(RenderWindow* win) : 	joueur(Affichable::HAUT, Vaisseau::JOUEUR),
 	viseur.SetPosition(sf::Vector2f(win->GetWidth()/2, win->GetHeight()/2));
 }
 
-Jeu::~Jeu() {}
+Jeu::Jeu(const Jeu& j): joueur(Affichable::HAUT, Vaisseau::JOUEUR),
+						musique()
+{
+
+}
+Jeu::~Jeu() {
+	ennemis.clear();
+	tirs.clear();
+}
 
 bool Jeu::init() {
 	return Jeu::imgViseur.LoadFromFile("./images/viseur.png");
+}
+
+void Jeu::reinitialisation() {
+	joueur.setVie(100);
+	joueur.SetPosition(window->GetWidth() /2 - joueur.GetSize().x, window->GetHeight() - joueur.GetSize().y / 2);
+	viseur.SetPosition(sf::Vector2f(window->GetWidth()/2, window->GetHeight()/2));
 }
 
 void Jeu::jouer() {
@@ -26,7 +40,7 @@ void Jeu::jouer() {
 	musique.Play();
 	bool enTrainDeTirer = false;
 	int deplacementHorizontal = 0;
-	while(continuer && ! joueur.estMort()) {
+	while(continuer && !joueur.estMort()) {
 		while(window->GetEvent(event)) {
 			switch(event.Type) {
 			case Event::KeyPressed:
@@ -81,7 +95,8 @@ void Jeu::jouer() {
 			}
 		}
 		while(ennemis.size() < 5) {
-			vaissTmp = new Vaisseau(Affichable::BAS, Vaisseau::ENNEMI);
+			//vaissTmp = new Vaisseau(Affichable::BAS, Vaisseau::ENNEMI);
+			vaissTmp = new Tourelle();
 			/* On place un nouvel ennemis au hasard sur l'ecran :
 				en abscisse : n'importe où sur l'ecran
 				en ordonnée : sur la première moitié de l'ecran
@@ -101,9 +116,11 @@ void Jeu::jouer() {
 		changeTime();
 		affiche();
 	}
-	if(joueur.estMort()) {
-		cout << "VOUS ETES MORT !!!!!!!" << endl;
-	}
+
+	musique.Pause(); //Pour reprendre la chanson au même endroit si on décide de recommencer une partie
+	/* ****************** Désalocation de la mémoire ****************** */
+	ennemis.clear();
+	tirs.clear();
 }
 
 void Jeu::affiche() {
@@ -155,6 +172,46 @@ void Jeu::changeTime() {
 	/* ************************* Gestion de l'IA des vaisseaux ennemis ************************* */
 	for(deque<Vaisseau*>::iterator vaiss = ennemis.begin(); vaiss != ennemis.end(); ++vaiss) {
 		(*vaiss)->ia(this);
+	}
+}
+
+bool Jeu::recommencerPartie() {
+	int largeur = 400;
+	int hauteur = 300;
+	int debutX = window->GetWidth() - (largeur * 1.5f);
+	int debutY = window->GetHeight() - (hauteur * 1.5f);
+	Shape cadre = Shape::Rectangle(debutX, debutY, debutX + largeur, debutY + hauteur, Color(255, 255, 255, 128));
+	String recommencer = String("Vous avouez-vous vaincu ?", Font::GetDefaultFont());
+	recommencer.SetPosition(debutX, debutY);
+	String reponseOui = String("Recommencer !!!", Font::GetDefaultFont());
+	reponseOui.SetPosition(debutX, debutY + hauteur/3);
+	String reponseNon = String("Abandonner ...", Font::GetDefaultFont());
+	reponseNon.SetPosition(debutX, debutY + hauteur*2/3);
+	Event event;
+	window->ShowMouseCursor(true);
+
+	window->Draw(cadre);
+	window->Draw(recommencer);
+	window->Draw(reponseOui);
+	window->Draw(reponseNon);
+	window->Display();
+
+	while (true) {
+		while(window->GetEvent(event)) {
+			if(event.Type == Event::MouseButtonReleased) {
+				//Si on clique dans le cadre :
+				if(event.MouseButton.X >= debutX && event.MouseButton.X <= debutX + largeur
+				  		&& event.MouseButton.Y >= debutY && event.MouseButton.Y <= debutY + hauteur) {
+					if(event.MouseButton.Y >= reponseNon.GetPosition().y) {
+						window->ShowMouseCursor(false);
+						return false;
+					} else if (event.MouseButton.Y >= reponseOui.GetPosition().y) {
+						window->ShowMouseCursor(false);
+						return true;
+					}
+				}
+			}
+		}
 	}
 }
 

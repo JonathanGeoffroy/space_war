@@ -1,6 +1,7 @@
 #include "Chercheur.hpp"
 #include "../Jeu.hpp"
 Chercheur::Chercheur() : Vaisseau(Affichable::BAS, Vaisseau::CHERCHEUR) {}
+
 void Chercheur::ia(Jeu* jeu) {
 	Vaisseau* joueur = jeu->getJoueur();
 	int thisGauche = GetPosition().x;

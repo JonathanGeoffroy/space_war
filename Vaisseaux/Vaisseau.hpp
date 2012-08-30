@@ -20,6 +20,7 @@ class Vaisseau :
 		static bool init();
 		void deplacer(RenderWindow* win, int dx, int dy); 
 		void incVie(int v);
+		void setVie(int v);
 		int getVie();
 		bool estMort();
 		bool touche(Tir* tir);

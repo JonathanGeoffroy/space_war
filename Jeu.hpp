@@ -7,14 +7,19 @@
 #include <deque>
 #include "Tirs/Tir.hpp"
 #include "Vaisseaux/Vaisseau.hpp"
+#include "Vaisseaux/Chercheur.hpp"
+#include "Vaisseaux/Tourelle.hpp"
 using namespace sf;
 
 class Jeu {
 public:
 	Jeu(RenderWindow* win);
+	Jeu(const Jeu& j);
 	~Jeu();
 	static bool init();
 	void jouer();
+	void reinitialisation();
+	bool recommencerPartie();
 	void affiche();
 	void changeTime();
 	Vaisseau* getJoueur();

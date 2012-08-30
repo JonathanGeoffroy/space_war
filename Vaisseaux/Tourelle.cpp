@@ -15,8 +15,6 @@ Tourelle::Tourelle() : Vaisseau(Affichable::BAS, Vaisseau::TOURELLE) {
   */
 void Tourelle::ia(Jeu* jeu) {
 	int rotat = GetRotation();
-	cout << rotat << endl;
-
 	if(! tirEnCours) {
 		//Dans ce cicle, on a pas encore tiré : on se déplace vers la gauche jusqu'à se trouver à -90 
 		if(rotat <= 135 && dirHorizontale == GAUCHE) { //Décalage de 45° vers la gauche

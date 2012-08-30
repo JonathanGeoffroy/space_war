@@ -55,11 +55,11 @@ void Vaisseau::calculeRotation(float y, float x) {
 		degAngle = demiPi - arcTan;
 		degAngle = degAngle * 90;
 	}
-	std::cout << "angle :" << std::endl; 
 	SetRotation(degAngle);
 }
 
 void Vaisseau::incVie(int v) { vie += v; }
+void Vaisseau::setVie(int v) { vie = v; }
 int Vaisseau::getVie() { return vie; }
 bool Vaisseau::estMort() { return vie <= 0; }
 void Vaisseau::tirer(Jeu* jeu) {
