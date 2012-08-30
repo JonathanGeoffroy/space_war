@@ -2,6 +2,7 @@
 #define VAISSEAU_HPP
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <math.h>
 #include "../Affichable.hpp"
@@ -26,9 +27,11 @@ class Vaisseau :
 		void tirer(Jeu* jeu);
 		virtual void ia(Jeu* jeu);
 	private:
-		static Image* img; 
+		static Image* img;
+		static sf::SoundBuffer sbTir;
 		int vie;
 		int direction;
 		Clock dernierTir;
+		static Sound sonTir;
 };
 #endif

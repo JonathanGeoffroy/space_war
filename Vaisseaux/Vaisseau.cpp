@@ -3,6 +3,8 @@
 #include "../Jeu.hpp"
 
 Image* Vaisseau::img = NULL;
+sf::SoundBuffer Vaisseau::sbTir = sf::SoundBuffer();
+sf::Sound Vaisseau::sonTir = sf::Sound();
 Vaisseau::Vaisseau(int dir, int numVaisseau) : Affichable(dir) {
 	vie = 100;
 	SetImage(img[numVaisseau]);
@@ -13,6 +15,7 @@ Vaisseau::~Vaisseau() {}
 
 bool Vaisseau::init() {
 	bool allIsInited = true;
+	/* *************** Chargement des images de tous les vaisseaux *************** */
 	int nbImgInit = 4;
 	std::string nomImg[4] = {"./images/joueur.png", "./images/ennemi.png", "./images/chercheur.png", "./images/tourelle.png"};
 	Vaisseau::img = new Image[nbImgInit];
@@ -20,6 +23,12 @@ bool Vaisseau::init() {
 		if(!img[i].LoadFromFile(nomImg[i])) {
 			allIsInited = false;
 		};
+	}
+	/* *************** Chargement du son lors d'un tir *************** */
+	if(sbTir.LoadFromFile("./sons/tir.wav")) {
+		sonTir.SetBuffer(sbTir);
+	} else {
+		allIsInited = false;
 	}
 	return allIsInited;
 }
@@ -58,6 +67,7 @@ void Vaisseau::tirer(Jeu* jeu) {
 		Tir* t = new Tir(this);
 		jeu->getTirs()->push_back(t);
 		dernierTir.Reset();
+		sonTir.Play();
 	}
 }
 
