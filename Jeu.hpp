@@ -1,14 +1,17 @@
 #ifndef JEU_HPP
 #define JEU_HPP
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include <fstream>
 #include <math.h> // FIXME : existe-il la même chose en CPP ? 
 #include <deque>
+#include <vector>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Tirs/Tir.hpp"
 #include "Vaisseaux/Vaisseau.hpp"
 #include "Vaisseaux/Chercheur.hpp"
 #include "Vaisseaux/Tourelle.hpp"
+using namespace std;
 using namespace sf;
 
 class Jeu {

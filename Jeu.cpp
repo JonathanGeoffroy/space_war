@@ -31,6 +31,8 @@ void Jeu::reinitialisation() {
 	joueur.setVie(100);
 	joueur.SetPosition(window->GetWidth() /2 - joueur.GetSize().x, window->GetHeight() - joueur.GetSize().y / 2);
 	viseur.SetPosition(sf::Vector2f(window->GetWidth()/2, window->GetHeight()/2));
+	ennemis.clear();
+	tirs.clear();
 }
 
 void Jeu::jouer() {
@@ -40,6 +42,7 @@ void Jeu::jouer() {
 	musique.Play();
 	bool enTrainDeTirer = false;
 	int deplacementHorizontal = 0;
+	float degres = 0;
 	while(continuer && !joueur.estMort()) {
 		while(window->GetEvent(event)) {
 			switch(event.Type) {
@@ -73,12 +76,12 @@ void Jeu::jouer() {
 
 			case Event::MouseMoved:
 				viseur.SetPosition(event.MouseMove.X - (viseur.GetSize().x / 2), event.MouseMove.Y - (viseur.GetSize().y / 2));
-				/*
-				joueur.calculeRotation(
-								joueur.GetPosition().y - viseur.GetPosition().y,
-								viseur.GetPosition().x - joueur.GetPosition().x
-							); // FIXME : ne fonctionne pas !
-				*/
+				degres = atan2f(
+							-(viseur.GetPosition().x - joueur.GetPosition().x),
+							joueur.GetPosition().y - viseur.GetPosition().y
+						);
+				degres = (degres * 180) / 3.14f;
+				joueur.SetRotation(degres);
 				break;
 			case Event::MouseButtonPressed:
 				if(event.MouseButton.Button == sf::Mouse::Left) {
@@ -95,12 +98,24 @@ void Jeu::jouer() {
 			}
 		}
 		while(ennemis.size() < 5) {
-			//vaissTmp = new Vaisseau(Affichable::BAS, Vaisseau::ENNEMI);
-			vaissTmp = new Tourelle();
-			/* On place un nouvel ennemis au hasard sur l'ecran :
+			// TODO : implémentation de salves d'ennemis
+
+			/* 
+			  On place un nouvel ennemis au hasard sur l'ecran :
 				en abscisse : n'importe où sur l'ecran
 				en ordonnée : sur la première moitié de l'ecran
 			*/
+			switch(Randomizer::Random(1, 3)) {
+				case Vaisseau::ENNEMI:
+					vaissTmp = new Vaisseau();
+					break;
+				case Vaisseau::CHERCHEUR:
+					vaissTmp = new Chercheur();
+					break;
+				case Vaisseau::TOURELLE:
+					vaissTmp = new Tourelle();
+					break;
+			}
 			vaissTmp->SetPosition(sf::Randomizer::Random((int)(vaissTmp->GetSize().x / 2), (int)(window->GetWidth() - vaissTmp->GetSize().x)), sf::Randomizer::Random((int)(vaissTmp->GetSize().y / 2), (int)(window->GetHeight() / 2 - vaissTmp->GetSize().y)));
 			ennemis.push_back(vaissTmp);
 		}
@@ -115,12 +130,13 @@ void Jeu::jouer() {
 
 		changeTime();
 		affiche();
+		window->Display();
 	}
 
 	musique.Pause(); //Pour reprendre la chanson au même endroit si on décide de recommencer une partie
 	/* ****************** Désalocation de la mémoire ****************** */
-	ennemis.clear();
-	tirs.clear();
+	//ennemis.clear();
+	//tirs.clear();
 }
 
 void Jeu::affiche() {
@@ -134,7 +150,6 @@ void Jeu::affiche() {
 			window->Draw(*(*it));
 	}
 	window->Draw(viseur);
-	window->Display();
 }
 
 void Jeu::changeTime() {
@@ -190,12 +205,6 @@ bool Jeu::recommencerPartie() {
 	Event event;
 	window->ShowMouseCursor(true);
 
-	window->Draw(cadre);
-	window->Draw(recommencer);
-	window->Draw(reponseOui);
-	window->Draw(reponseNon);
-	window->Display();
-
 	while (true) {
 		while(window->GetEvent(event)) {
 			if(event.Type == Event::MouseButtonReleased) {
@@ -212,6 +221,13 @@ bool Jeu::recommencerPartie() {
 				}
 			}
 		}
+		window->Clear();
+		affiche();
+		window->Draw(cadre);
+		window->Draw(recommencer);
+		window->Draw(reponseOui);
+		window->Draw(reponseNon);
+		window->Display();
 	}
 }
 
