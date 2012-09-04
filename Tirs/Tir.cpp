@@ -24,6 +24,8 @@ bool Tir::init() {
 }
 
 void Tir::deplace() {
-	Move(/*GetRotation()*/ 0, direction * VITESSE_TIR);
+	int y = direction * VITESSE_TIR;
+	int x = (int)( y * tanf(GetRotation() * (3.14f / 180)));
+	Move(x, y);
 }
 
