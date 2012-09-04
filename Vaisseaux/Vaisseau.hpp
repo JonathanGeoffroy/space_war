@@ -14,10 +14,13 @@ class Vaisseau :
 	public Affichable {
 	public:
 		const static int JOUEUR = 0, ENNEMI = 1, CHERCHEUR = 2, TOURELLE = 3;
+		const static int SALVE_ENNEMIS = 0, SALVE_CHERCHEURS = 1, SALVE_TOURELLES = 2, SALVE_CHERCHEURS_ET_TOURELLES = 3, SALVE_ENNEMIS_ET_TOURELLES = 4, SALVE_ALL = 5;
+		const static int NB_TYPE_SALVE = 6, NB_ENNEMIS_SALVE = 5;
 		const static int VITESSE_JOUEUR = 8;
 		Vaisseau(int dir = Affichable::BAS, int numVaisseau = 1);
 		~Vaisseau();
 		static bool init();
+		static void createSalve(deque<Vaisseau*>* salve, RenderWindow* window, int typeSalve);
 		void deplacer(RenderWindow* win, int dx, int dy); 
 		void incVie(int v);
 		void setVie(int v);

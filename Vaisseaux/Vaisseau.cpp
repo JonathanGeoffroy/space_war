@@ -13,6 +13,73 @@ Vaisseau::Vaisseau(int dir, int numVaisseau) : Affichable(dir) {
 
 Vaisseau::~Vaisseau() {}
 
+/**
+  * Permet de créer une salve contenant plusieurs ennemis
+  * On suppose que l'on appelle cette méthode seulement si il n'y a plus d'ennemis sur le terrain
+  * En conséquence, la deque passée en paramètre en d'abord vidé afin d'éviter d'éventuelle fuites de mémoires.
+  * @param salve la deque à remplir d'ennemis
+  * @param typeSalve le type de salve à créer. Doit correspondre à une constante donnée dans le header Vaisseau.hpp
+  */
+void Vaisseau::createSalve(deque<Vaisseau*>* salve, RenderWindow* window, int typeSalve) {
+	salve->clear(); //Désallocation de mémoire
+	Vaisseau* ennemi = NULL;
+	switch(typeSalve) {
+	case SALVE_ENNEMIS:
+		for(int i = 0; i < NB_ENNEMIS_SALVE; i++) {
+			ennemi = new Vaisseau();
+			ennemi->SetPosition(
+				sf::Randomizer::Random((int)(ennemi->GetSize().x / 2), (int)(window->GetWidth() - ennemi->GetSize().x)),
+				sf::Randomizer::Random((int)(ennemi->GetSize().y / 2), (int)(window->GetHeight() / 2 - ennemi->GetSize().y))
+			);
+			salve->push_back(ennemi);
+		}
+		break;
+	case SALVE_TOURELLES:
+		for(int i = 0; i < NB_ENNEMIS_SALVE; i++) {
+			ennemi = new Tourelle();
+			ennemi->SetPosition(window->GetWidth() * i / NB_ENNEMIS_SALVE + ennemi->GetSize().x / 2, ennemi->GetSize().y);
+			salve->push_back(ennemi);
+		}
+		break;
+	case SALVE_CHERCHEURS:
+		for(int i = 0; i < NB_ENNEMIS_SALVE; i++) {
+			ennemi = new Chercheur();
+			ennemi->SetPosition(window->GetWidth() * i / NB_ENNEMIS_SALVE + ennemi->GetSize().x / 2, ennemi->GetSize().y);
+			salve->push_back(ennemi);
+		}
+		break;
+	case SALVE_ENNEMIS_ET_TOURELLES:
+		ennemi = new Tourelle();
+		ennemi->SetPosition(window->GetWidth() / 3, window->GetHeight() / 3);
+		salve->push_back(ennemi);
+		ennemi = new Tourelle();
+		ennemi->SetPosition(window->GetWidth() * 2 / 3, window->GetHeight() / 3);
+		salve->push_back(ennemi);
+		for(int i = 0; i < NB_ENNEMIS_SALVE - 2; i++) {
+			ennemi = new Vaisseau();
+			ennemi->SetPosition(window->GetWidth() * i / (NB_ENNEMIS_SALVE - 2) + ennemi->GetSize().x / 2, ennemi->GetSize().x);
+			salve->push_back(ennemi);
+		}
+		break;
+	case SALVE_CHERCHEURS_ET_TOURELLES:
+		ennemi = new Tourelle();
+		ennemi->SetPosition(window->GetWidth() / 3, window->GetHeight() / 3);
+		salve->push_back(ennemi);
+		ennemi = new Tourelle();
+		ennemi->SetPosition(window->GetWidth() * 2 / 3, window->GetHeight() / 3);
+		salve->push_back(ennemi);
+		for(int i = 0; i < NB_ENNEMIS_SALVE - 2; i++) {
+			ennemi = new Chercheur();
+			ennemi->SetPosition(window->GetWidth() * i / (NB_ENNEMIS_SALVE - 2) + ennemi->GetSize().x / 2, ennemi->GetSize().x);
+			salve->push_back(ennemi);
+		}
+		break;
+	default:
+		cout << "Cette salve n'existe pas !!!" << endl;
+		break;
+	}
+}
+
 bool Vaisseau::init() {
 	bool allIsInited = true;
 	/* *************** Chargement des images de tous les vaisseaux *************** */

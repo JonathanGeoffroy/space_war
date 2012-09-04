@@ -43,6 +43,7 @@ void Jeu::jouer() {
 	bool enTrainDeTirer = false;
 	int deplacementHorizontal = 0;
 	float degres = 0;
+	int salve = 0;
 	while(continuer && !joueur.estMort()) {
 		while(window->GetEvent(event)) {
 			switch(event.Type) {
@@ -97,27 +98,9 @@ void Jeu::jouer() {
 			default: break;
 			}
 		}
-		while(ennemis.size() < 5) {
-			// TODO : implémentation de salves d'ennemis
-
-			/* 
-			  On place un nouvel ennemis au hasard sur l'ecran :
-				en abscisse : n'importe où sur l'ecran
-				en ordonnée : sur la première moitié de l'ecran
-			*/
-			switch(Randomizer::Random(1, 3)) {
-				case Vaisseau::ENNEMI:
-					vaissTmp = new Vaisseau();
-					break;
-				case Vaisseau::CHERCHEUR:
-					vaissTmp = new Chercheur();
-					break;
-				case Vaisseau::TOURELLE:
-					vaissTmp = new Tourelle();
-					break;
-			}
-			vaissTmp->SetPosition(sf::Randomizer::Random((int)(vaissTmp->GetSize().x / 2), (int)(window->GetWidth() - vaissTmp->GetSize().x)), sf::Randomizer::Random((int)(vaissTmp->GetSize().y / 2), (int)(window->GetHeight() / 2 - vaissTmp->GetSize().y)));
-			ennemis.push_back(vaissTmp);
+		if(ennemis.empty()) {
+			Vaisseau::createSalve(&ennemis, window, salve);
+			salve = (salve + 1) % Vaisseau::NB_TYPE_SALVE;
 		}
 		/* 
 		 Permet de déplacer le joueur, sans tenir compte du temps de latence de EnableKeyRepeat
