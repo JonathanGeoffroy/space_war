@@ -15,7 +15,7 @@ class Vaisseau :
 	public:
 		const static int JOUEUR = 0, ENNEMI = 1, CHERCHEUR = 2, TOURELLE = 3;
 		const static int VITESSE_JOUEUR = 8;
-		Vaisseau(int dir, int numVaisseau);
+		Vaisseau(int dir = Affichable::BAS, int numVaisseau = 1);
 		~Vaisseau();
 		static bool init();
 		void deplacer(RenderWindow* win, int dx, int dy); 
@@ -25,7 +25,7 @@ class Vaisseau :
 		bool estMort();
 		bool touche(Tir* tir);
 		void calculeRotation(float y, float x);
-		void tirer(Jeu* jeu);
+		void tirer(Jeu* jeu, float tempsEntre2Tirs = 0.2f);
 		virtual void ia(Jeu* jeu);
 	private:
 		static Image* img;

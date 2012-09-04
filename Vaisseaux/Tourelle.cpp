@@ -33,6 +33,6 @@ void Tourelle::ia(Jeu* jeu) {
 			dirHorizontale = GAUCHE;
 		}
 		else
-			tirer(jeu);
+			tirer(jeu, 0.3f);
 	}
 }

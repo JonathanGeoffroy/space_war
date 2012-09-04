@@ -14,6 +14,6 @@ void Chercheur::ia(Jeu* jeu) {
 	} else if (thisGauche > joueurDroite) {
 		deplacer(win, -10, 0);
 	} else {
-		tirer(jeu);
+		tirer(jeu, 0.4f);
 	}
 }

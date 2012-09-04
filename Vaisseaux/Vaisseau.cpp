@@ -62,8 +62,8 @@ void Vaisseau::incVie(int v) { vie += v; }
 void Vaisseau::setVie(int v) { vie = v; }
 int Vaisseau::getVie() { return vie; }
 bool Vaisseau::estMort() { return vie <= 0; }
-void Vaisseau::tirer(Jeu* jeu) {
-	if(dernierTir.GetElapsedTime() >= 0.2f) {
+void Vaisseau::tirer(Jeu* jeu, float tempsEntre2Tirs) {
+	if(dernierTir.GetElapsedTime() >= tempsEntre2Tirs) {
 		Tir* t = new Tir(this);
 		jeu->getTirs()->push_back(t);
 		dernierTir.Reset();
@@ -88,8 +88,8 @@ void Vaisseau::deplacer(RenderWindow* win, int dx, int dy) {
   		* tirer 
   */
 void Vaisseau::ia(Jeu* jeu) {
-	if(dernierTir.GetElapsedTime() >= 1.5) {
-		tirer(jeu);
+	if(dernierTir.GetElapsedTime() >= 0.4f) {
+		tirer(jeu, 0.4f);
 		float dirIa = sf::Randomizer::Random(0, 2);
 		RenderWindow* win = jeu->getWindow();
 		if(dirIa >= 1.0f) {
