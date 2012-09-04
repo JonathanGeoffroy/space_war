@@ -13,6 +13,7 @@ Vaisseau::Vaisseau(int dir, int numVaisseau) : Affichable(dir) {
 
 Vaisseau::~Vaisseau() {}
 
+
 bool Vaisseau::init() {
 	bool allIsInited = true;
 	/* *************** Chargement des images de tous les vaisseaux *************** */
